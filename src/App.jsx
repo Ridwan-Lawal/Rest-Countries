@@ -4,10 +4,18 @@ import { useEffect, useReducer } from "react";
 import Homepage from "./pages/Homepage";
 import PageNotFound from "./pages/PageNotFound";
 import Country from "./pages/Country";
+import Loading from "./components/appstate/Loading";
+import Error from "./components/appstate/Error";
 // import RegionalCountries from "./pages/RegionalCountries";
 
+/*    
+local storage to store theme
+commit and create git repository
+
+*/
+
 const initialValue = {
-  isDark: true,
+  isDark: JSON.parse(localStorage.getItem("countryTheme")),
   status: "loading",
   countriesData: [],
   errMessage: "",
@@ -40,8 +48,16 @@ function reducer(state, action) {
 function App() {
   // eslint-disable-next-line no-undef, no-unused-vars
   const [state, dispatch] = useReducer(reducer, initialValue);
-  const { isDark, countriesData, regionToFilter, searchCountryForm } = state;
+  const {
+    isDark,
+    countriesData,
+    regionToFilter,
+    searchCountryForm,
+    status,
+    errMessage,
+  } = state;
 
+  // effect for fetching countries data
   useEffect(function () {
     const abortController = new AbortController();
     const signal = abortController.signal;
@@ -67,40 +83,52 @@ function App() {
     return () => abortController.abort();
   }, []);
 
+  // effect for storing theme in localStorage
+  useEffect(
+    function () {
+      localStorage.setItem("countryTheme", JSON.stringify(isDark));
+    },
+    [isDark]
+  );
+
   return (
     <div
       className={`min-h-screen ${
         isDark ? "bg-veryDarkBlue" : "bg-veryLightGray"
       }  overflow-auto font-nunito transition-colors duration-1000`}
     >
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Homepage
-                isDark={isDark}
-                dispatch={dispatch}
-                countriesData={countriesData}
-                regionToFilter={regionToFilter}
-                searchCountryForm={searchCountryForm}
-              />
-            }
-          />
-          <Route
-            path="country/:countryName"
-            element={
-              <Country
-                isDark={isDark}
-                dispatch={dispatch}
-                countriesData={countriesData}
-              />
-            }
-          />
-          {/* <Route path="africa" element={<RegionalCountries />} /> */}
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </BrowserRouter>
+      {status === "loading" && <Loading />}
+      {status === "error" && <Error errMessage={errMessage} />}
+      {status === "ready" && (
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Homepage
+                  isDark={isDark}
+                  dispatch={dispatch}
+                  countriesData={countriesData}
+                  regionToFilter={regionToFilter}
+                  searchCountryForm={searchCountryForm}
+                />
+              }
+            />
+            <Route
+              path="country/:countryName"
+              element={
+                <Country
+                  isDark={isDark}
+                  dispatch={dispatch}
+                  countriesData={countriesData}
+                />
+              }
+            />
+            {/* <Route path="africa" element={<RegionalCountries />} /> */}
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </BrowserRouter>
+      )}
     </div>
   );
 }
