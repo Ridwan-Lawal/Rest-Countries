@@ -2,9 +2,12 @@
 // eslint-disable-next-line no-unused-vars
 import { IoMoonOutline, IoSunnyOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { useCountries } from "../../contexts/CountryContext";
 
-function NavBar({ isDark, dispatch }) {
+function NavBar() {
   const navigate = useNavigate();
+
+  const { isDark, dispatch } = useCountries();
   return (
     <nav
       className={` ${

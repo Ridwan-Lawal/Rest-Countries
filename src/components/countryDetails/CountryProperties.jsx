@@ -1,8 +1,11 @@
+import { useCountries } from "../../contexts/CountryContext";
 import { useConvertPopulation } from "../customHooks/useConvertPopulation";
 
 /* eslint-disable react/prop-types */
-function CountryProperties({ isDark, children, selectedCountry }) {
+function CountryProperties({ children, selectedCountry }) {
   const selectedCountryPopulation = useConvertPopulation(selectedCountry);
+
+  const { isDark } = useCountries();
 
   return (
     <div

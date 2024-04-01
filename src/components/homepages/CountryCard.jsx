@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useConvertPopulation } from "../customHooks/useConvertPopulation";
+import { useCountries } from "../../contexts/CountryContext";
 
 /* eslint-disable react/prop-types */
-function CountryCard({ isDark, country }) {
+function CountryCard({ country }) {
   const countryPopulation = useConvertPopulation(country);
+
+  const { isDark } = useCountries();
 
   return (
     <div

@@ -1,9 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
+import { useCountries } from "../../contexts/CountryContext";
 
-function RegionalCountriesFilter({ isDark, dispatch, regionToFilter }) {
+function RegionalCountriesFilter() {
   const [isFilterOptionOpen, setIsFilterOptionOpen] = useState(false);
+  const { isDark, dispatch, regionToFilter } = useCountries();
+
   return (
     <div
       className={`${

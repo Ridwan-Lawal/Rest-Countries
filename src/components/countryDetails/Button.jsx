@@ -1,11 +1,13 @@
+import { useCountries } from "../../contexts/CountryContext";
+
 /* eslint-disable react/prop-types */
 function Button({
   content = "Back",
   textSize = "text-[15px]",
   children,
-  isDark,
   onClick,
 }) {
+  const { isDark } = useCountries();
   return (
     <button
       onClick={onClick}

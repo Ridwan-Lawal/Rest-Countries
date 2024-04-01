@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
 import Button from "./Button";
+import { useCountries } from "../../contexts/CountryContext";
 
-function BorderCountries({ isDark, countriesData, borderCountries }) {
-  console.log(countriesData, borderCountries);
+function BorderCountries({ borderCountries }) {
+  const { isDark, countriesData } = useCountries();
 
   const borderCountriesInFull = countriesData.filter((country) =>
     borderCountries?.includes(country.alpha3Code)

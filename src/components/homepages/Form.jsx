@@ -1,7 +1,10 @@
 /* eslint-disable react/prop-types */
 import { IoSearch } from "react-icons/io5";
+import { useCountries } from "../../contexts/CountryContext";
 
-function Form({ isDark, searchCountryForm, dispatch }) {
+function Form() {
+  const { isDark, searchCountryForm, dispatch } = useCountries();
+
   return (
     <form
       className={` flex gap-8 items-center px-4 py-3 rounded-lg  ${
