@@ -1,11 +1,17 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 
 import worldCountriesData from "../local-data/data.json";
 
 const initialValue = {
-  isDark: JSON.parse(localStorage.getItem("countryTheme")),
+  isDark: false,
   countriesData: worldCountriesData,
   regionToFilter: "",
   searchCountryForm: "",
@@ -22,6 +28,9 @@ function reducer(state, action) {
     case "formOnChange":
       return { ...state, searchCountryForm: action.payload };
 
+    case "countryData/fromStorage":
+      return action.payload;
+
     default:
       throw new Error("Unknown error");
   }
@@ -34,26 +43,34 @@ function CountryProvider({ children }) {
 
   const { isDark, countriesData, regionToFilter, searchCountryForm } = state;
 
-  // effect for storing theme in localStorage
+  // effect for storing state in localStorage
   useEffect(
     function () {
-      localStorage.setItem("countryTheme", JSON.stringify(isDark));
+      if (state === initialValue) return;
+      localStorage.setItem("countryData", JSON.stringify(state));
     },
-    [isDark]
+    [state]
   );
 
+  // effect for getting stored state from the local storage
+  useEffect(function () {
+    const countryData = JSON.parse(localStorage.getItem("countryData"));
+    if (!countryData) return;
+    dispatch({ type: "countryData/fromStorage", payload: countryData });
+  }, []);
+
+  const values = useMemo(() => {
+    return {
+      isDark,
+      countriesData,
+      regionToFilter,
+      searchCountryForm,
+      dispatch,
+    };
+  }, [isDark, countriesData, regionToFilter, searchCountryForm, dispatch]);
+
   return (
-    <CountryContext.Provider
-      value={{
-        isDark,
-        countriesData,
-        regionToFilter,
-        searchCountryForm,
-        dispatch,
-      }}
-    >
-      {children}
-    </CountryContext.Provider>
+    <CountryContext.Provider value={values}>{children}</CountryContext.Provider>
   );
 }
 

@@ -18,6 +18,9 @@ function BorderCountries({ borderCountries }) {
     >
       <h2 className="text-xl font-bold  w-fit">Border Countries:</h2>
 
+      {!borderCountriesInFull.length && (
+        <p className="text-lg text-red-800">No bordering countries!</p>
+      )}
       <div className="flex items-center flex-wrap gap-5 mt-6 md:mt-0 ">
         {borderCountriesInFull.map((borderCountry) => (
           <Link

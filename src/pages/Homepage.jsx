@@ -5,6 +5,7 @@ import RegionalCountriesFilter from "../components/homepages/RegionalCountriesFi
 import NavBar from "../components/homepages/NavBar";
 import { Link } from "react-router-dom";
 import { useCountries } from "../contexts/CountryContext";
+import { useEffect } from "react";
 
 function Homepage() {
   const { countriesData, regionToFilter, searchCountryForm } = useCountries();
@@ -23,6 +24,13 @@ function Homepage() {
         : country
     );
 
+  useEffect(
+    function () {
+      console.log(regionalCountries);
+    },
+    [regionalCountries]
+  );
+
   return (
     <div className="pb-20">
       <NavBar />
@@ -32,6 +40,13 @@ function Homepage() {
           <Form />
           <RegionalCountriesFilter />
         </div>
+        {!regionalCountries.length && (
+          <p className="flex items-center text-2xl flex-col gap-3  text-center mt-32">
+            <span className="text-3xl"> ☹</span>
+            Couldn&apos;t find the country you were looking for! try another
+            region
+          </p>
+        )}
         <div className="mt-14 grid grid-cols-1 items-center gap-12 md:gap-14 md:grid-cols-2 lg:grid-cols-3 ">
           {regionalCountries?.map((country, id) => (
             <Link to={`/country/${country.name}`} key={id}>
